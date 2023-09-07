@@ -40,13 +40,14 @@ class _BotScreenState extends State<BotScreen> {
 
   @override
   void initState() {
-    final token = "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";
+    final token = "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";
+    // dotenv.env["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"];
         //"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";
 
     try {
       chatGPT = OpenAI.instance.build(
         token: token,
-        baseOption: HttpSetup(receiveTimeout: Duration(milliseconds: 600)),
+        baseOption: HttpSetup(receiveTimeout: Duration(milliseconds: 10000)),
       );
       print("chatGPT instance initialized successfully");
     } catch (e) {
@@ -88,11 +89,12 @@ class _BotScreenState extends State<BotScreen> {
       insertNewData(response.data!.last!.url!, isImage: true);
     } else {
       final request =
-      CompleteText(prompt: message.text, model: TextDavinci3Model());
+      CompleteText(prompt: message.text, model: TextDavinci3Model(),maxTokens: 300);
 
       final response = await chatGPT!.onCompletion(request: request);
       Vx.log(response!.choices[0].text);
       insertNewData(response.choices[0].text, isImage: false);
+
     }
   }
 

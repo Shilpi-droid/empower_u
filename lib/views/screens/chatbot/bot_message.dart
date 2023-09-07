@@ -29,7 +29,7 @@ class ChatMessage extends StatelessWidget {
           10.widthBox,
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: width*.6, // Set the maximum width constraint
+              maxWidth: width*.25, // Set the maximum width constraint
             ),
             child: Directionality(
               textDirection: TextDirection.ltr  ,
