@@ -59,8 +59,10 @@ class ScanController extends GetxController
   initTFLite() async
   {
       await Tflite.loadModel(
-          model: "assets/ssd_mobilenet.tflite",
-          labels: "assets/ssd_mobilenet.txt",
+          // model: "assets/ssd_mobilenet.tflite",
+          // labels: "assets/ssd_mobilenet.txt",
+          model: "assets/yolov2_tiny.tflite",
+          labels: "assets/yolov2_tiny.txt",
           isAsset: true,
           numThreads: 1,
           useGpuDelegate: false
@@ -105,7 +107,8 @@ class ScanController extends GetxController
       bytesList: image.planes.map((e) {
         return e.bytes;
       }).toList(),
-      model: "SSDMobileNet",
+      model: 'YOLO',
+      // model: "SSDMobileNet",
       asynch: true,
       imageHeight: image.height,
       imageWidth: image.width,

@@ -8,6 +8,7 @@ import 'package:empower_u/views/screens/deaf.dart';
 import 'package:empower_u/views/widgets/option_tile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 
 import '../constants/firebase_constants.dart';
@@ -79,91 +80,167 @@ class _RootPageState extends State<RootPage> {
             width: width,
             child: Column(
               children: [
-                SizedBox(height: height*.155,),
+                SizedBox(height: height*.3,),
                 // OptionTile2(),
-                OptionTile(
-                  bgColor: Color(0xffffcf3c4),
-                  // bgColor: Colors.brown,
-                  //txtColor: Colors.brown,
-                  circColor: Color(0xfffefae6),
-                  txtColor: Color(0xfffcaf55),
-                  icon: Icons.screen_search_desktop_outlined,
-                  text: "Blindness",
-                  page: Blind()
-                ),
-                SizedBox(height: height*.04,),
-                OptionTile(
-                  bgColor: Color(0xffd7efff),
-                  circColor: Color(0xfff1f8fe),
-                  txtColor: Color(0xff3a9df7),
-                  icon: Icons.headset_mic_outlined,
-                  text: "Deafness",
-                  page: Deaf()
-                ),
-                SizedBox(height: height*.04,),
-
-            InkWell(
-              onTap: (){
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => isUser?HomeScreen(username: username,):VerificationScreen(),
-                  ),
-                );
-              },
-              child: Stack(
-                  children:[
-                    Container(
-                      height: height*.2,
-                      width: height*.2,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(0xffe1d6ff),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                            //Colors.grey,
-                            Color(0xff250E63),
-                            spreadRadius: 1,
-                            blurRadius: 9,
-                            offset: Offset(0, 3), // horizontal and vertical offset
+                // OptionTile(
+                //   bgColor: Color(0xffffcf3c4),
+                //   // bgColor: Colors.brown,
+                //   //txtColor: Colors.brown,
+                //   circColor: Color(0xfffefae6),
+                //   txtColor: Color(0xfffcaf55),
+                //   icon: Icons.screen_search_desktop_outlined,
+                //   text: "Blindness",
+                //   page: Blind()
+                // ),
+                SizedBox(
+                  height: height*.1,
+                  width: width*.8,
+                  child: ElevatedButton(
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Blind(),
                           ),
-                        ],
-                        //border: Border.all(color: txtColor,width: 2)
-                      ),
-                    ),
-                    Positioned(
-                      left: width*.07,
-                      top: height*.017,
-                      child: Container(
-                        height: height*.12,
-                        width: height*.12,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xfff4f0fe),
+                        );
+                      },
+                    style: ElevatedButton.styleFrom(
+                        primary: btnColor, // Set the background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0), // Set the border radius
                         ),
-                        child: Icon(Icons.chat_bubble_outline,color: Color(0xff8a6df4),size: height*.09,),
-                      ),
                     ),
-                    Positioned(
-                        top: height*.15,
-                        width: height*.2,
-                        child: Text(
-                          "Community",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xff8a6df4),
+                      child:Row(
+
+                        children: [
+                            Image.asset("assets/images/Read.png"),
+                            50.widthBox,
+                            "Read".text.white.size(24).make(),
+                        ],
+                      )
+                  ),
+                ),
+                SizedBox(height: height*.04,),
+                SizedBox(
+                  height: height*.1,
+                  width: width*.8,
+                  child: ElevatedButton(
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Deaf(),
                           ),
-                        )
-                    ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: btnColor, // Set the background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0), // Set the border radius
+                        ),
+                      ),
+                      child:Row(
 
+                        children: [
+                          Image.asset("assets/images/Listen.png"),
+                          50.widthBox,
+                          "Listen".text.white.size(24).make(),
+                        ],
+                      )
+                  ),
+                ),
+                SizedBox(height: height*.04,),
+                SizedBox(
+                  height: height*.1,
+                  width: width*.8,
+                  child: ElevatedButton(
+                      onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => isUser?HomeScreen(username: username,):VerificationScreen(),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: btnColor, // Set the background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0), // Set the border radius
+                        ),
+                      ),
+                      child:Row(
 
-                  ]
-              ),
-            ),
+                        children: [
+                          Image.asset("assets/images/Community.png"),
+                          50.widthBox,
+                          "Community".text.white.size(24).make(),
+                        ],
+                      )
+                  ),
+                ),
+
+            // InkWell(
+            //   onTap: (){
+            //
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => isUser?HomeScreen(username: username,):VerificationScreen(),
+            //       ),
+            //     );
+            //   },
+            //   child: Stack(
+            //       children:[
+            //         Container(
+            //           height: height*.2,
+            //           width: height*.2,
+            //           decoration: BoxDecoration(
+            //             borderRadius: BorderRadius.circular(30),
+            //             color: Color(0xffe1d6ff),
+            //             boxShadow: [
+            //               BoxShadow(
+            //                 color:
+            //                 //Colors.grey,
+            //                 Color(0xff250E63),
+            //                 spreadRadius: 1,
+            //                 blurRadius: 9,
+            //                 offset: Offset(0, 3), // horizontal and vertical offset
+            //               ),
+            //             ],
+            //             //border: Border.all(color: txtColor,width: 2)
+            //           ),
+            //         ),
+            //         Positioned(
+            //           left: width*.07,
+            //           top: height*.017,
+            //           child: Container(
+            //             height: height*.12,
+            //             width: height*.12,
+            //             decoration: BoxDecoration(
+            //                 shape: BoxShape.circle,
+            //                 color: Color(0xfff4f0fe),
+            //             ),
+            //             child: Icon(Icons.chat_bubble_outline,color: Color(0xff8a6df4),size: height*.09,),
+            //           ),
+            //         ),
+            //         Positioned(
+            //             top: height*.15,
+            //             width: height*.2,
+            //             child: Text(
+            //               "Community",
+            //               textAlign: TextAlign.center,
+            //               style: TextStyle(
+            //                   fontSize: 22,
+            //                   fontWeight: FontWeight.w600,
+            //                   color: Color(0xff8a6df4),
+            //               ),
+            //             )
+            //         ),
+            //
+            //
+            //       ]
+            //   ),
+            // ),
                 // OptionTile(
                 //     bgColor: Color(0xffe1d6ff),
                 //     circColor: Color(0xfff4f0fe),
