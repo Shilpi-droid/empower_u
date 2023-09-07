@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:alan_voice/alan_voice.dart';
 import 'package:camera/camera.dart';
 import 'package:empower_u/views/widgets/read_result.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class _OCRControllerState extends State<OCRController> with WidgetsBindingObserv
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _future=_requestCameraPermission();
+    // AlanVoice.deactivate();
   }
 
   @override
@@ -52,7 +54,7 @@ class _OCRControllerState extends State<OCRController> with WidgetsBindingObserv
     _stopCamera();
     _textRecognizer.close();
     super.dispose();
-
+    // AlanVoice.deactivate();
   }
 
 

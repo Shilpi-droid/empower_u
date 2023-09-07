@@ -162,7 +162,7 @@ class _RootPageState extends State<RootPage> {
               AlanVoice.addButton("aafbd1131282a024a6ff8f9210321c132e956eca572e1d8b807a3e2338fdd0dc/stage");
                 /// Handle commands from Alan AI Studio
               AlanVoice.onCommand.add((command) => _handleCommand(command.data));
-                speakLabel("There are three options in this page: Blind, Deaf and Community, which one do you want to proceed with?");   
+                speakLabel("There are three options in this page: open vision,        open lecture mode        and open community which one do you want to proceed with?");
               print('OK button pressed');
             },
             isAlanPressed:isAlanActive
@@ -306,6 +306,12 @@ class _CustomPopupState extends State<CustomPopup> {
     super.initState();
     speakLabel(widget.message);
   }
+  // void dispose() {
+  //   // TODO: implement dispose
+  //     AlanVoice.activate();
+  //   super.dispose();
+  // }
+
 
   Future<void> speakLabel(String label) async {
     if (!isSpeaking) {
@@ -318,7 +324,7 @@ class _CustomPopupState extends State<CustomPopup> {
         await flutterTts.speak(label);
 
         // Pause the execution for the specified duration
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 10));
 
       } finally {
         await flutterTts.stop();

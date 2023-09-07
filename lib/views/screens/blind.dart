@@ -37,8 +37,8 @@ class _BlindState extends State<Blind> {
                 ModeButton(text: "Walking Mode",page: WalkingMode(),),
                 SizedBox(height: height*.05,),
                 ModeButton(text: "Read Mode",page: OCRController()),
-                SizedBox(height: height*.05,),
-                ModeButton(text: "Currency Mode",page: Center(child: Text("Comming Soon!"),),),
+                // SizedBox(height: height*.05,),
+                // ModeButton(text: "Currency Mode",page: Center(child: Text("Comming Soon!"),),),
               ],
             ),
           )

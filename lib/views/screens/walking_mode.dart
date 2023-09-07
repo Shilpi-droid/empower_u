@@ -1,3 +1,4 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:camera/camera.dart';
 import 'package:empower_u/controllers/scan_controller.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,16 @@ import 'package:get/get.dart';
 
 //Distance Mode
 
-class WalkingMode extends StatelessWidget {
+class WalkingMode extends StatefulWidget {
 
   WalkingMode({Key? key}) : super(key: key);
+
+  @override
+  State<WalkingMode> createState() => _WalkingModeState();
+}
+
+class _WalkingModeState extends State<WalkingMode> {
+
 
    Future<void> speakLabel(String label) async {
      if (!isSpeaking) {
@@ -33,6 +41,19 @@ class WalkingMode extends StatelessWidget {
     final FlutterTts flutterTts = FlutterTts();
 
     bool isSpeaking=false;
+
+    @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // AlanVoice.deactivate();
+    }
+    @override
+  void dispose() {
+    // TODO: implement dispose
+    //   AlanVoice.activate();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

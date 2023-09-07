@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../controllers/community_controller.dart';
 import '../../constants/strings.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class ChatScreen extends StatefulWidget {
    ChatScreen({Key? key,required this.communityId,required this.username}) : super(key: key);
 
@@ -23,40 +24,86 @@ class _ChatScreenState extends State<ChatScreen> {
    final TextEditingController _messageController = TextEditingController();
 
 
-  void _sendMessage() {
+
+  Future<bool> checkForAbuse(String message) async {
+    print("lalalalalalalalalalalalalalalalalalalalala");
+    final url = Uri.parse('http://uhack.pythonanywhere.com/check_string'); // Replace with your API endpoint URL
+    bool abuse=false;
+    final Map<String, dynamic> requestBody = {
+      'text': message,
+    };
+
+    final headers = {'Content-Type': 'application/json'};
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      abuse=jsonDecode(response.body)['result'];
+      if (response.statusCode == 200) {
+
+        print('Response data: ${jsonDecode(response.body)}');
+
+      } else {
+        print('Error: ${response.statusCode}');
+        print('Response data: ${response.body}');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+    return abuse;
+  }
+
+
+  void _sendMessage() async {
     final String messageContent = _messageController.text;
+    if(await checkForAbuse(messageContent))
+      {
+        final snackBar = SnackBar(
+          content: Text('You cant use abusive language in this community', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    if (messageContent.isNotEmpty) {
-      final String userId = FirebaseAuth.instance.currentUser?.uid ?? ''; // Get the UID
+      }
+else {
+      if (messageContent.isNotEmpty) {
+        final String userId = FirebaseAuth.instance.currentUser?.uid ??
+            ''; // Get the UID
 
-      FirebaseFirestore.instance
-          .collection('users') // Assuming your users collection is named 'users'
-          .doc(userId)
-          .get()
-          .then((docSnapshot) {
-        if (docSnapshot.exists) {
-          final String sender = docSnapshot['name'] as String; // Get the user's name
+        FirebaseFirestore.instance
+            .collection(
+            'users') // Assuming your users collection is named 'users'
+            .doc(userId)
+            .get()
+            .then((docSnapshot) {
+          if (docSnapshot.exists) {
+            final String sender = docSnapshot['name'] as String; // Get the user's name
 
-          final Timestamp currentTime = Timestamp.now();
+            final Timestamp currentTime = Timestamp.now();
 
-          print("sender: $sender");
-          print("sender: $messageContent");
-          print("sender: $currentTime");
-          FirebaseFirestore.instance
-              .collection('communities')
-              .doc(widget.communityId) // Assuming communityId is passed to the ChatScreen
-              .collection('messages')
-              .add({
-            'username': sender,
-            'message': messageContent,
-            'timestamp': currentTime,
-          });
+            print("sender: $sender");
+            print("sender: $messageContent");
+            print("sender: $currentTime");
+            FirebaseFirestore.instance
+                .collection('communities')
+                .doc(widget
+                .communityId) // Assuming communityId is passed to the ChatScreen
+                .collection('messages')
+                .add({
+              'username': sender,
+              'message': messageContent,
+              'timestamp': currentTime,
+            });
 
-          _messageController.clear();
-        } else {
-          print('User not found in Firestore');
-        }
-      });
+            _messageController.clear();
+          } else {
+            print('User not found in Firestore');
+          }
+        });
+      }
     }
     scrollToBottom();
   }
