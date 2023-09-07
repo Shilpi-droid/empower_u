@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'controllers/community_controller.dart';
-
+// import 'package:alan_voice/alan_voice.dart';
 
 List<CameraDescription> cameras=[];
 

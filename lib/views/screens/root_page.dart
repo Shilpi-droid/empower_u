@@ -1,4 +1,6 @@
 
+// import 'package:alan_voice/alan_voice.dart';
+import 'package:alan_voice/alan_voice.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:empower_u/views/constants/strings.dart';
@@ -8,6 +10,7 @@ import 'package:empower_u/views/screens/deaf.dart';
 import 'package:empower_u/views/widgets/option_tile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 
@@ -24,6 +27,17 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
+
+
+  // _RootPageState() {
+  //   /// Init Alan Button with project key from Alan AI Studio
+  //   AlanVoice.addButton("aafbd1131282a024a6ff8f9210321c132e956eca572e1d8b807a3e2338fdd0dc/stage");
+  //
+  //   /// Handle commands from Alan AI Studio
+  //   AlanVoice.onCommand.add((command) {
+  //     debugPrint("got new command ${command.toString()}");
+  //   });
+  // }
   var isUser=false;
   String username="";
   checkUser()async{
@@ -57,10 +71,54 @@ class _RootPageState extends State<RootPage> {
 
     });
   }
+  Future<void> speakLabel(String label) async {
+    if (!isSpeaking) {
+      isSpeaking = true; // Lock speech
+
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.setPitch(1.0);
+
+      try {
+        await flutterTts.speak(label);
+
+        // Pause the execution for the specified duration
+        await Future.delayed(Duration(seconds: 7));
+
+      } finally {
+        await flutterTts.stop();
+        isSpeaking = false; // Release the lock
+      }
+    }
+  }
+  bool isSpeaking=false;
+
+  final FlutterTts flutterTts = FlutterTts();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CustomPopup(
+            title: 'Voice Assistant',
+            message: 'Do you need voice assistance?',
+            onOkPressed: () {
+              // Handle OK button press
+              AlanVoice.addButton("aafbd1131282a024a6ff8f9210321c132e956eca572e1d8b807a3e2338fdd0dc/stage");
+                /// Handle commands from Alan AI Studio
+                AlanVoice.onCommand.add((command) {
+                  debugPrint("got new command ${command.toString()}");
+                });
+                speakLabel("There are three options in this page: Blind, Deaf and Community, which one do you want to proceed with?");   
+              print('OK button pressed');
+            },
+          );
+        },
+      );
+    });
+
     checkUser();
   }
 
@@ -70,28 +128,12 @@ class _RootPageState extends State<RootPage> {
     final width=MediaQuery.of(context).size.width;
     return  SafeArea(
         child: Scaffold(
-          // appBar: AppBar(
-          //   backgroundColor: Color(0xff250E63),
-          // ),
-          // backgroundColor: Color(0xff2A2C28),
           backgroundColor: bgColor,
-          //Color(0xff151413),
           body: Container(
             width: width,
             child: Column(
               children: [
                 SizedBox(height: height*.3,),
-                // OptionTile2(),
-                // OptionTile(
-                //   bgColor: Color(0xffffcf3c4),
-                //   // bgColor: Colors.brown,
-                //   //txtColor: Colors.brown,
-                //   circColor: Color(0xfffefae6),
-                //   txtColor: Color(0xfffcaf55),
-                //   icon: Icons.screen_search_desktop_outlined,
-                //   text: "Blindness",
-                //   page: Blind()
-                // ),
                 SizedBox(
                   height: height*.1,
                   width: width*.8,
@@ -129,7 +171,8 @@ class _RootPageState extends State<RootPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Deaf(),
+                            builder: (context) =>
+                                Deaf(),
                           ),
                         );
                       },
@@ -178,78 +221,6 @@ class _RootPageState extends State<RootPage> {
                       )
                   ),
                 ),
-
-            // InkWell(
-            //   onTap: (){
-            //
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => isUser?HomeScreen(username: username,):VerificationScreen(),
-            //       ),
-            //     );
-            //   },
-            //   child: Stack(
-            //       children:[
-            //         Container(
-            //           height: height*.2,
-            //           width: height*.2,
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.circular(30),
-            //             color: Color(0xffe1d6ff),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                 color:
-            //                 //Colors.grey,
-            //                 Color(0xff250E63),
-            //                 spreadRadius: 1,
-            //                 blurRadius: 9,
-            //                 offset: Offset(0, 3), // horizontal and vertical offset
-            //               ),
-            //             ],
-            //             //border: Border.all(color: txtColor,width: 2)
-            //           ),
-            //         ),
-            //         Positioned(
-            //           left: width*.07,
-            //           top: height*.017,
-            //           child: Container(
-            //             height: height*.12,
-            //             width: height*.12,
-            //             decoration: BoxDecoration(
-            //                 shape: BoxShape.circle,
-            //                 color: Color(0xfff4f0fe),
-            //             ),
-            //             child: Icon(Icons.chat_bubble_outline,color: Color(0xff8a6df4),size: height*.09,),
-            //           ),
-            //         ),
-            //         Positioned(
-            //             top: height*.15,
-            //             width: height*.2,
-            //             child: Text(
-            //               "Community",
-            //               textAlign: TextAlign.center,
-            //               style: TextStyle(
-            //                   fontSize: 22,
-            //                   fontWeight: FontWeight.w600,
-            //                   color: Color(0xff8a6df4),
-            //               ),
-            //             )
-            //         ),
-            //
-            //
-            //       ]
-            //   ),
-            // ),
-                // OptionTile(
-                //     bgColor: Color(0xffe1d6ff),
-                //     circColor: Color(0xfff4f0fe),
-                //     txtColor: Color(0xff8a6df4),
-                //     icon: Icons.chat_bubble_outline,
-                //     text: "Community",
-                //     page: VerificationScreen()
-                //   //ShowcaseTimelineTile(),//MemoryLane(),
-                // ),
               ],
             ),
           ),
@@ -257,3 +228,72 @@ class _RootPageState extends State<RootPage> {
     );
   }
 }
+
+class CustomPopup extends StatefulWidget {
+  final String title;
+  final String message;
+  final Function onOkPressed;
+
+  CustomPopup({
+    required this.title,
+    required this.message,
+    required this.onOkPressed,
+  });
+
+  @override
+  State<CustomPopup> createState() => _CustomPopupState();
+}
+
+class _CustomPopupState extends State<CustomPopup> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    speakLabel(widget.message);
+  }
+
+  Future<void> speakLabel(String label) async {
+    if (!isSpeaking) {
+      isSpeaking = true; // Lock speech
+
+      await flutterTts.setLanguage('en-US');
+      await flutterTts.setPitch(1.0);
+
+      try {
+        await flutterTts.speak(label);
+
+        // Pause the execution for the specified duration
+        await Future.delayed(Duration(seconds: 3));
+
+      } finally {
+        await flutterTts.stop();
+        isSpeaking = false; // Release the lock
+      }
+    }
+  }
+  final FlutterTts flutterTts = FlutterTts();
+  bool isSpeaking=false;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      content: Text(widget.message),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the popup
+          },
+          child: Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the popup
+            widget.onOkPressed(); // Execute the provided function
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+  }
+}
+

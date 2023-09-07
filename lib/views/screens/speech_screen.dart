@@ -33,6 +33,32 @@ class _SpeechScreenState extends State<SpeechScreen> {
         repeatPauseDuration: Duration(milliseconds: 100),
         showTwoGlows: true ,
         child: GestureDetector(
+          // onTap: () async
+          // {
+          //   setState(() {
+          //     isListening=!isListening;
+          //   });
+          //   if(isListening)speechToText.stop();
+          //   if(!isListening)
+          //    {
+          //      var available = await speechToText.initialize();
+          //      if(available)
+          //        {
+          //          setState(() {
+          //            isListening=true;
+          //            speechToText.listen(
+          //              onResult: (result)
+          //              {
+          //                 setState(() {
+          //                   text= result.recognizedWords;
+          //
+          //                 });
+          //              }
+          //            );
+          //          });
+          //        }
+          //    }
+          // },
           onTapDown: (details) async{
            if(!isListening)
              {
