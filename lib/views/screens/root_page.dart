@@ -7,6 +7,7 @@ import 'package:empower_u/views/constants/strings.dart';
 import 'package:empower_u/views/screens/blind.dart';
 import 'package:empower_u/views/screens/community/home_screen.dart';
 import 'package:empower_u/views/screens/deaf.dart';
+import 'package:empower_u/views/screens/walking_mode.dart';
 import 'package:empower_u/views/widgets/option_tile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 
+import '../../controllers/OCRController.dart';
 import '../constants/firebase_constants.dart';
 import '../widgets/option_tile.dart';
 import 'community/verification_screen.dart';
@@ -25,6 +27,7 @@ class RootPage extends StatefulWidget {
   @override
   State<RootPage> createState() => _RootPageState();
 }
+
 
 class _RootPageState extends State<RootPage> {
 
@@ -38,6 +41,56 @@ class _RootPageState extends State<RootPage> {
   //     debugPrint("got new command ${command.toString()}");
   //   });
   // }
+  void _handleCommand(Map<String, dynamic> command) {
+    switch(command["command"]){
+      case "blind":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Blind(),
+          ),
+        );
+      break;
+      case "deaf":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Deaf(),
+          ),
+        );
+        break;
+      case "community":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => isUser?HomeScreen(username: username,):VerificationScreen(),
+          ),
+        );
+        break;
+      case "walk":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WalkingMode()
+          ),
+        );
+        break;
+      case "read":
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OCRController()
+          ),
+        );
+        break;
+        default: debugPrint("unknown command");
+
+    }
+    // Handle voice commands here
+  }
+
+  bool isAlanActive = false;
+
   var isUser=false;
   String username="";
   checkUser()async{
@@ -108,12 +161,11 @@ class _RootPageState extends State<RootPage> {
               // Handle OK button press
               AlanVoice.addButton("aafbd1131282a024a6ff8f9210321c132e956eca572e1d8b807a3e2338fdd0dc/stage");
                 /// Handle commands from Alan AI Studio
-                AlanVoice.onCommand.add((command) {
-                  debugPrint("got new command ${command.toString()}");
-                });
+              AlanVoice.onCommand.add((command) => _handleCommand(command.data));
                 speakLabel("There are three options in this page: Blind, Deaf and Community, which one do you want to proceed with?");   
               print('OK button pressed');
             },
+            isAlanPressed:isAlanActive
           );
         },
       );
@@ -124,6 +176,7 @@ class _RootPageState extends State<RootPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final height=MediaQuery.of(context).size.height;
     final width=MediaQuery.of(context).size.width;
     return  SafeArea(
@@ -233,11 +286,13 @@ class CustomPopup extends StatefulWidget {
   final String title;
   final String message;
   final Function onOkPressed;
+  final bool isAlanPressed;
 
   CustomPopup({
     required this.title,
     required this.message,
     required this.onOkPressed,
+    required this.isAlanPressed
   });
 
   @override
