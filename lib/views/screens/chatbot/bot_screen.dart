@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+
 import '../../constants/strings.dart';
 import '../../widgets/three_dots.dart';
 import 'bot_message.dart';
@@ -40,7 +41,7 @@ class _BotScreenState extends State<BotScreen> {
 
   @override
   void initState() {
-    final token = "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";
+    final token = "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";
     // dotenv.env["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"];
         //"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";
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class ModeButton extends StatefulWidget {
@@ -29,6 +30,7 @@ class _ModeButtonState extends State<ModeButton> {
     return InkWell(
       onTap: (){
         speakLabel(widget.text);
+        HapticFeedback.vibrate();
         Navigator.push(
             context,
             MaterialPageRoute(

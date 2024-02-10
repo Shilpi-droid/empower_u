@@ -17,13 +17,41 @@ class Blind extends StatefulWidget {
 
 class _BlindState extends State<Blind> {
 
+@override
+  void initState() {
+    // TODO: implement initState
+  // speakLabel("There are two options in this page:walking mode and read mode which one do you want to proceed with?");
+    super.initState();
+  }
+Future<void> speakLabel(String label) async {
+  if (!isSpeaking) {
+    isSpeaking = true; // Lock speech
 
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setPitch(1.0);
+
+    try {
+      await flutterTts.speak(label);
+
+      // Pause the execution for the specified duration
+      await Future.delayed(Duration(seconds: 7));
+
+    } finally {
+      await flutterTts.stop();
+      isSpeaking = false; // Release the lock
+    }
+  }
+}
+bool isSpeaking=false;
+
+final FlutterTts flutterTts = FlutterTts();
 
   @override
   Widget build(BuildContext context) {
     final height=MediaQuery.of(context).size.height;
     final width=MediaQuery.of(context).size.width;
-    return Scaffold(
+    return
+      Scaffold(
       backgroundColor:Color(0xff2A2C28),
       body: Row(
         children: [

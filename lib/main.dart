@@ -10,6 +10,10 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 import 'controllers/community_controller.dart';
 // import 'package:alan_voice/alan_voice.dart';
+import 'package:provider/provider.dart';
+
+import 'controllers/sensor_data.dart';
+
 
 List<CameraDescription> cameras=[];
 
@@ -38,7 +42,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: RootPage(),
+
+      home: ChangeNotifierProvider(
+          create: (context) => DistanceDataProvider(),
+          child: RootPage()),
       initialBinding: BindingsBuilder(() {
         Get.put(CommunityController());
       }),

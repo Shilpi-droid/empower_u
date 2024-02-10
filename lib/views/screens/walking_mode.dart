@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/sensor_data.dart';
+
 //Distance Mode
 
 class WalkingMode extends StatefulWidget {
@@ -41,19 +43,19 @@ class _WalkingModeState extends State<WalkingMode> {
     final FlutterTts flutterTts = FlutterTts();
 
     bool isSpeaking=false;
+   final distanceDataService = DistanceDataProvider();
 
-    @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // AlanVoice.deactivate();
-    }
-    @override
-  void dispose() {
-    // TODO: implement dispose
-    //   AlanVoice.activate();
-    super.dispose();
-  }
+   @override
+   void initState() {
+     super.initState();
+    distanceDataService.startListeningToDistance();
+   }
+
+   @override
+   void dispose() {
+     distanceDataService.stopListeningToDistance();
+     super.dispose();
+   }
 
   @override
   Widget build(BuildContext context) {

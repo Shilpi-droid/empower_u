@@ -1,5 +1,7 @@
 
 // import 'package:alan_voice/alan_voice.dart';
+import 'dart:async';
+
 import 'package:alan_voice/alan_voice.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,8 +13,11 @@ import 'package:empower_u/views/screens/walking_mode.dart';
 import 'package:empower_u/views/widgets/option_tile2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:vibration/vibration.dart';
 
 
 import '../../controllers/OCRController.dart';
@@ -150,6 +155,7 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // HapticFeedback.vibrate();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       showDialog(
         context: context,
@@ -210,7 +216,7 @@ class _RootPageState extends State<RootPage> {
                         children: [
                             Image.asset("assets/images/Read.png"),
                             50.widthBox,
-                            "Read".text.white.size(24).make(),
+                            "Vision".text.white.size(24).make(),
                         ],
                       )
                   ),
@@ -240,7 +246,7 @@ class _RootPageState extends State<RootPage> {
                         children: [
                           Image.asset("assets/images/Listen.png"),
                           50.widthBox,
-                          "Listen".text.white.size(24).make(),
+                          "Audio".text.white.size(24).make(),
                         ],
                       )
                   ),
@@ -274,6 +280,17 @@ class _RootPageState extends State<RootPage> {
                       )
                   ),
                 ),
+
+                  // GestureDetector(
+                  //     onTap:()async {
+                  //       Vibration.vibrate();
+                  //
+                  //     },
+                  //       child: Container(
+                  //         color:Colors.green,
+                  //           height: 100,width: 100,)
+                  // )
+
               ],
             ),
           ),
@@ -300,17 +317,65 @@ class CustomPopup extends StatefulWidget {
 }
 
 class _CustomPopupState extends State<CustomPopup> {
+  SpeechToText speechToText = SpeechToText();
+  String text="";
+  var isListening= false;
+  void initSTT()async
+  {
+    if(!isListening)
+    {
+      var available = await speechToText.initialize();
+      if(available)
+      {
+        setState(() {
+          isListening=true;
+          speechToText.listen(
+              onResult: (result)
+              {
+                setState(() {
+                  text= result.recognizedWords;
+
+                });
+              }
+          );
+        });
+      }
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     speakLabel(widget.message);
+    // Timer(Duration(seconds: 5), () {
+    //   widget.onOkPressed;
+    //   Navigator.pop(context);
+    // });
+    // initSTT();
+    // print("#######################################");
+    // print(text);
+    // if(text=="")
+    //   {
+    //     initSTT();
+    //   }
+    // if(text=="yes")
+    //   {
+    //     widget.onOkPressed;
+    //   }
+    // if(text=="no") Navigator.of(context).pop(); // Close the popup
+
   }
-  // void dispose() {
-  //   // TODO: implement dispose
-  //     AlanVoice.activate();
-  //   super.dispose();
-  // }
+
+  void dispose() {
+    // TODO: implement dispose
+    //   AlanVoice.activate();
+    setState(() {
+      isListening=false;
+      speechToText.stop();
+    });
+    super.dispose();
+  }
+
 
 
   Future<void> speakLabel(String label) async {
@@ -329,6 +394,19 @@ class _CustomPopupState extends State<CustomPopup> {
       } finally {
         await flutterTts.stop();
         isSpeaking = false; // Release the lock
+
+        initSTT();
+        print("#######################################");
+        print(text);
+        if(text=="")
+        {
+          initSTT();
+        }
+        if(text=="yes")
+        {
+          widget.onOkPressed;
+        }
+        if(text=="no") Navigator.of(context).pop();
       }
     }
   }
@@ -344,14 +422,14 @@ class _CustomPopupState extends State<CustomPopup> {
           onPressed: () {
             Navigator.of(context).pop(); // Close the popup
           },
-          child: Text('Cancel'),
+          child: Text('No'),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop(); // Close the popup
             widget.onOkPressed(); // Execute the provided function
           },
-          child: Text('OK'),
+          child: Text('Yes'),
         ),
       ],
     );

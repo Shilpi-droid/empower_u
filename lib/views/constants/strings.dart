@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 const listOfFeatures = ["Fast", "Powerful", "Secure", "Private", "Unlimited", "Synced", "Reliable"];
 
-const appname = "Quick Chats",
+const appname = "Empower U",
     account = "Account",
-    chats = "Chats",
-    status = "Status",
-    camera = "camera",
+    chats = "Community",
+    status = "Chat Bot",
+    camera = "",
     invite = "Invite a friend",
     logout = "Logout",
     connectingLives ="Connecting Lives... ",
     settings = "Settings",
-    poweredby = "Desgined & Developed by Baaba Devs",
+    poweredby = "Desgined & Developed by Reboot Bots",
     cont = "Start Messaging",
     slogan = "join the\nrevolution\ttoday.",
     continueText = "Continue",

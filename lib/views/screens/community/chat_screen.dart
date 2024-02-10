@@ -23,50 +23,116 @@ class _ChatScreenState extends State<ChatScreen> {
  // Pass the community ID to the screen
    final TextEditingController _messageController = TextEditingController();
 
+  bool containsProfanity(String input) {
+    List<String> profanityList = [
+      'arsehole',
+      'asshat',
+      'asshole',
+      'b',
+      'big black cock',
+      'bitch',
+      'bloody',
+      'blowjob',
+      'bugger',
+      'bullshit',
+      'chicken shit',
+      'clusterfuck',
+      'cock',
+      'cocksucker',
+      'coonass',
+      'cornhole',
+      'cox–zucker machine',
+      'cracker',
+      'cunt',
+      'dafuq',
+      'damn',
+      'dick',
+      'enshittification',
+      'faggot',
+      'feck',
+      'fuck',
+      'fuck her right in the pussy',
+      'fuck joe biden',
+      'fuck, marry, kill',
+      'fuckery',
+      'grab \'em by the pussy',
+      'healslut',
+      'motherfucker',
+      'nigga',
+      'nigger',
+      'paki',
+      'poof',
+      'poofter',
+      'prick',
+      'pussy',
+      'ratfucking',
+      'retard',
+      'russian warship, go fuck yourself',
+      'shit',
+      'shit happens',
+      'shithouse',
+      'shitter',
+      'shut the fuck up',
+      'shut the hell up',
+      'slut',
+      'son of a bitch',
+      'spic',
+      'twat',
+      'wanker',
+      'whore'
+    ];
 
-
-  Future<bool> checkForAbuse(String message) async {
-    print("lalalalalalalalalalalalalalalalalalalalala");
-    final url = Uri.parse('http://uhack.pythonanywhere.com/check_string'); // Replace with your API endpoint URL
-    bool abuse=false;
-    final Map<String, dynamic> requestBody = {
-      'text': message,
-    };
-
-    final headers = {'Content-Type': 'application/json'};
-
-    try {
-      final response = await http.post(
-        url,
-        headers: headers,
-        body: jsonEncode(requestBody),
-      );
-
-      abuse=jsonDecode(response.body)['result'];
-      if (response.statusCode == 200) {
-
-        print('Response data: ${jsonDecode(response.body)}');
-
-      } else {
-        print('Error: ${response.statusCode}');
-        print('Response data: ${response.body}');
+    for (String profanity in profanityList) {
+      if (input.toLowerCase().contains(profanity)) {
+        return true;
       }
-    } catch (error) {
-      print('Error: $error');
     }
-    return abuse;
+
+    return false;
   }
+
+
+  // Future<bool> checkForAbuse(String message) async {
+  //   print("lalalalalalalalalalalalalalalalalalalalala");
+  //   final url = Uri.parse('http://uhack.pythonanywhere.com/check_string'); // Replace with your API endpoint URL
+  //   bool abuse=false;
+  //   final Map<String, dynamic> requestBody = {
+  //     'text': message,
+  //   };
+  //
+  //   final headers = {'Content-Type': 'application/json'};
+  //
+  //   try {
+  //     final response = await http.post(
+  //       url,
+  //       headers: headers,
+  //       body: jsonEncode(requestBody),
+  //     );
+  //
+  //     abuse=jsonDecode(response.body)['result'];
+  //     if (response.statusCode == 200) {
+  //
+  //       print('Response data: ${jsonDecode(response.body)}');
+  //
+  //     } else {
+  //       print('Error: ${response.statusCode}');
+  //       print('Response data: ${response.body}');
+  //     }
+  //   } catch (error) {
+  //     print('Error: $error');
+  //   }
+  //   return abuse;
+  // }
 
 
   void _sendMessage() async {
     final String messageContent = _messageController.text;
-    if(await checkForAbuse(messageContent))
+    if(await containsProfanity(messageContent))
       {
         final snackBar = SnackBar(
           content: Text('You cant use abusive language in this community', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),),
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
       }
 else {
       if (messageContent.isNotEmpty) {
